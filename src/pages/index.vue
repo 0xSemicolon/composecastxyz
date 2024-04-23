@@ -1,5 +1,10 @@
 <template>
-  <ComposeScreen :referrer-url="referrer" v-model:text="text" v-model:embeds="embeds" />
+  <ComposeScreen
+    :referrer-url="referrer"
+    :preferred="preferred"
+    v-model:text="text"
+    v-model:embeds="embeds"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -9,8 +14,15 @@ import ComposeScreen from "../components/ComposeScreen.vue";
 
 const route = useRoute();
 
+const cleanUrl = (url: string | undefined | null) => {
+  if (!url) return "";
+  if (url.startsWith("http://") || url.startsWith("https://")) return url;
+  return `https://${url}`;
+};
 const calcReferrer = (r: RouteLocationNormalizedLoaded) =>
-  document.referrer || route.query["referrer"]?.toString() || "";
+  document.referrer || cleanUrl(route.query["referrer"]?.toString());
+const calcPreferred = (r: RouteLocationNormalizedLoaded) =>
+  (route.query["preferred[]"]?.toString().split(",") || []).map((r:string) => cleanUrl(r));
 const calcText = (r: RouteLocationNormalizedLoaded) =>
   route.query["text"]?.toString() || "";
 const calcEmbeds = (r: RouteLocationNormalizedLoaded) =>
@@ -19,12 +31,14 @@ const calcEmbeds = (r: RouteLocationNormalizedLoaded) =>
 const referrer = ref<string>(calcReferrer(route));
 const text = ref<string>(calcText(route));
 const embeds = ref<string[]>(calcEmbeds(route));
+const preferred = ref<string[]>(calcPreferred(route));
 watch(
   route,
   (r: RouteLocationNormalizedLoaded) => {
     text.value = calcText(r);
     embeds.value = calcEmbeds(r);
     referrer.value = calcReferrer(r);
+    preferred.value = calcPreferred(r);
   },
   { deep: true }
 );

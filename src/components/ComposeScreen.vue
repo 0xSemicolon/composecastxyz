@@ -1,6 +1,6 @@
 <template>
   <v-container class="fill-height">
-    <v-responsive class="align-centerfill-height mx-auto" max-width="900">
+    <v-responsive class="align-centerfill-height mx-auto pt-8" max-width="900">
       <v-img class="mb-4 mt-10" height="70" src="/images/farcaster.svg" />
 
       <div class="text-center">
@@ -8,7 +8,7 @@
           {{ topText }}
         </div>
 
-        <h1 class="text-h4 font-weight-bold">Compose a cast</h1>
+        <h1 class="text-h4 font-weight-bold">Share this cast</h1>
       </div>
 
       <div class="py-4" />
@@ -50,11 +50,11 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6" v-for="(opt, i) in options" :key="i">
+        <v-col cols="6" v-for="(opt, i) in sources" :key="i">
           <v-card
             class="py-4"
             color="surface"
-            @click="opt.click()"
+            @click="chooseOption(opt)"
             append-icon="mdi-open-in-new"
             rel="noopener noreferrer"
             rounded="lg"
@@ -71,6 +71,84 @@
         </v-col>
       </v-row>
     </v-responsive>
+    <v-dialog v-model="isShowingRedirectDialog" :max-width="600">
+      <v-card v-if="isShowingRedirectDialog">
+        <v-card-title class="text-h4 text-center pt-7 pb-4">
+          <v-avatar>
+            <v-img :src="targetSource.imageUrl"></v-img>
+          </v-avatar>
+          {{ targetSource.productName }}</v-card-title
+        >
+        <v-card-text>
+
+          <v-alert
+            class="text-h6 px-4 py-6"
+            icon="mdi-format-align-left"
+            variant="text"
+          >
+            {{ text }}
+            <span class="text-primary" v-for="(e, i) in embeds || []" :key="i">
+              {{ e }}</span
+            >
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            block
+            color="primary"
+            variant="elevated"
+            :href="targetUrl"
+            target="_blank"
+          >
+            Continue to {{ targetSource.domain }}
+            <v-icon end>mdi-arrow-right-bold</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-dialog v-model="isShowingCopyFirstDialog" :max-width="600">
+      <v-card v-if="isShowingCopyFirstDialog">
+        <v-card-title class="text-h4 text-center pt-7 pb-4">
+          <v-avatar>
+            <v-img :src="targetSource.imageUrl"></v-img>
+          </v-avatar>
+          {{ targetSource.productName }}</v-card-title
+        >
+        <v-card-text>
+          <v-alert type="info" variant="text">
+            Unfortunately there is no native redirect URL supported in this platform yet.
+            So to post the following you will have to copy and paste the post text first.
+          </v-alert>
+
+          <v-alert
+            class="text-h6 px-4 py-6 cursor-pointer"
+            :icon="wasCopied ? undefined : 'mdi-content-copy'"
+            variant="tonal"
+            :type="wasCopied ? 'success' : undefined"
+            border
+            @click="copyPostText()"
+          >
+            {{ text }}
+            <span class="text-primary" v-for="(e, i) in embeds || []" :key="i">
+              {{ e }}</span
+            >
+          </v-alert>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn
+            block
+            :color="wasCopied ? 'primary' : undefined"
+            variant="elevated"
+            :href="targetUrl"
+            target="_blank"
+            :disabled="!wasCopied"
+          >
+            Continue to {{ targetSource.domain }}
+            <v-icon end>mdi-arrow-right-bold</v-icon>
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -78,16 +156,9 @@
 import { ref, computed, defineProps, defineModel, watch } from "vue";
 import { randomSources, ISource } from "@/sources/index";
 
-const props = defineProps<{ referrerUrl: string | null }>();
-const text = defineModel("text", { type: String });
-const embeds = defineModel("embeds", { type: Array });
-
-interface IOption {
-  imageUrl: string;
-  domain: string;
-  productName: string;
-  click: () => void;
-}
+const props = defineProps<{ referrerUrl: string | null; preferred: string[] }>();
+const text = defineModel<string>("text", { type: String });
+const embeds = defineModel<string[]>("embeds", { type: Array });
 
 const topText = computed(() => {
   if (!props.referrerUrl) {
@@ -97,8 +168,34 @@ const topText = computed(() => {
 });
 
 const sources = computed<ISource[]>(() => {
-  return randomSources(props.referrerUrl || window.location.href);
+  return randomSources(props.referrerUrl);
 });
+
+const isShowingRedirectDialog = ref(false);
+const isShowingCopyFirstDialog = ref(false);
+const targetSource = ref<ISource | null>(null);
+const targetUrl = ref<string | null>(null);
+
+const wasCopied = ref(false);
+const copyPostText = () => {
+  wasCopied.value = true;
+  navigator.clipboard.writeText(
+    `${text.value || ""}${embeds.value?.map((e: string) => ` ${e}`).join("")}`
+  );
+};
+
+const chooseOption = (source: ISource) => {
+  targetSource.value = source;
+  if (source.fulfilmentType === "redirect") {
+    isShowingRedirectDialog.value = true;
+    targetUrl.value = source.linkGenerator({ text: text.value, embeds: embeds.value });
+  } else if (source.fulfilmentType === "promptCopy") {
+    isShowingCopyFirstDialog.value = true;
+    targetUrl.value = source.linkGenerator({ text: text.value, embeds: embeds.value });
+  } else {
+    throw new Error("Unsupported fulfillmentType");
+  }
+};
 
 watch(
   () => props.referrerUrl,
@@ -111,22 +208,11 @@ watch(
       first.autoredirectCondition &&
       first.autoredirectCondition({ url: new URL(url) })
     ) {
-      window.location.href = first
-        .linkGenerator({ text: text.value, embeds: embeds.value })
-        .toString();
+      chooseOption(first);
     }
   },
   { immediate: true }
 );
-
-const options = computed<IOption[]>(() => {
-  return sources.value.map((s: ISource) => ({
-    imageUrl: s.imageUrl,
-    domain: s.domain,
-    productName: s.productName,
-    click: () => {},
-  }));
-});
 </script>
 
 <style scoped>

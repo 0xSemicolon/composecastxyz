@@ -3,24 +3,31 @@ import supercast from './supercast';
 import yup from './yup';
 import farquest from './farquest';
 import herocast from './herocast';
-import { ISource, IPromptCopySource, IRedirectSource, ISourceDetails } from './types';
+export type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails } from './types';
 
-export type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails }
+const ALL_SOURCES = [
+    warpcast,
+    supercast,
+    yup,
+    farquest,
+    herocast
+];
 
-export const randomSources = (url: URL | string):ISource[] => {
+export const randomSources = (url: URL | string | null | undefined) => {
+    if (!url) {
+        return ALL_SOURCES.sort(() => 0.5 - Math.random());
+    }
     if (typeof url === 'string') {
         url = new URL(url);
     }
-    return [
-        warpcast,
-        supercast,
-        yup,
-        farquest,
-        herocast
-    ].sort((a, b) => {
-        if (a.preferenceCondition && a.preferenceCondition({ url })) {
-            return 0 - Math.random();
-        }
-        return 0.5 - Math.random();
-    });
+    return ALL_SOURCES
+        .map(a => ({
+            ...a,
+            isPreferred: a.preferenceCondition && a.preferenceCondition({ url })
+        }))
+        .sort((a, b) => {
+            if (a.isPreferred === b.isPreferred) return 0.5 - Math.random();
+            else if (a.isPreferred) return -1;
+            else return 1;
+        });
 };
