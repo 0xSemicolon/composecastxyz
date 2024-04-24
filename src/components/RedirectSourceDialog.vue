@@ -19,7 +19,7 @@
           hide-details
         ></v-checkbox>
         <v-checkbox
-          :label="`Automatically redirect if coming from ${redirectSource.productName}`"
+          :label="`Automatically continue if coming from ${redirectSource.productName}`"
           hide-details
         ></v-checkbox>
       </v-card-text>
