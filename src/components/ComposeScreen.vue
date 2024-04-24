@@ -50,7 +50,7 @@
           </v-card>
         </v-col>
 
-        <v-col cols="6" v-for="(opt, i) in sources" :key="i">
+        <v-col sm="12" lg="6" v-for="(opt, i) in sources" :key="i">
           <v-card
             class="py-4"
             color="surface"
@@ -71,90 +71,28 @@
         </v-col>
       </v-row>
     </v-responsive>
-    <v-dialog v-model="isShowingRedirectDialog" :max-width="600">
-      <v-card v-if="isShowingRedirectDialog">
-        <v-card-title class="text-h4 text-center pt-7 pb-4">
-          <v-avatar>
-            <v-img :src="targetSource.imageUrl"></v-img>
-          </v-avatar>
-          {{ targetSource.productName }}</v-card-title
-        >
-        <v-card-text>
 
-          <v-alert
-            class="text-h6 px-4 py-6"
-            icon="mdi-format-align-left"
-            variant="text"
-          >
-            {{ text }}
-            <span class="text-primary" v-for="(e, i) in embeds || []" :key="i">
-              {{ e }}</span
-            >
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            block
-            color="primary"
-            variant="elevated"
-            :href="targetUrl"
-            target="_blank"
-          >
-            Continue to {{ targetSource.domain }}
-            <v-icon end>mdi-arrow-right-bold</v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-    <v-dialog v-model="isShowingCopyFirstDialog" :max-width="600">
-      <v-card v-if="isShowingCopyFirstDialog">
-        <v-card-title class="text-h4 text-center pt-7 pb-4">
-          <v-avatar>
-            <v-img :src="targetSource.imageUrl"></v-img>
-          </v-avatar>
-          {{ targetSource.productName }}</v-card-title
-        >
-        <v-card-text>
-          <v-alert type="info" variant="text">
-            Unfortunately there is no native redirect URL supported in this platform yet.
-            So to post the following you will have to copy and paste the post text first.
-          </v-alert>
+    <RedirectSourceDialog
+      v-model="isShowingRedirectDialog"
+      :text="text"
+      :embeds="embeds"
+      :source="targetSource"
+    ></RedirectSourceDialog>
 
-          <v-alert
-            class="text-h6 px-4 py-6 cursor-pointer"
-            :icon="wasCopied ? undefined : 'mdi-content-copy'"
-            variant="tonal"
-            :type="wasCopied ? 'success' : undefined"
-            border
-            @click="copyPostText()"
-          >
-            {{ text }}
-            <span class="text-primary" v-for="(e, i) in embeds || []" :key="i">
-              {{ e }}</span
-            >
-          </v-alert>
-        </v-card-text>
-        <v-card-actions>
-          <v-btn
-            block
-            :color="wasCopied ? 'primary' : undefined"
-            variant="elevated"
-            :href="targetUrl"
-            target="_blank"
-            :disabled="!wasCopied"
-          >
-            Continue to {{ targetSource.domain }}
-            <v-icon end>mdi-arrow-right-bold</v-icon>
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <PromptCopySourceDialog
+      v-model="isShowingCopyFirstDialog"
+      :text="text"
+      :embeds="embeds"
+      :source="targetSource"
+    ></PromptCopySourceDialog>
   </v-container>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, defineProps, defineModel, watch } from "vue";
 import { randomSources, ISource } from "@/sources/index";
+import RedirectSourceDialog from "./RedirectSourceDialog.vue";
+import PromptCopySourceDialog from "./PromptCopySourceDialog.vue";
 
 const props = defineProps<{ referrerUrl: string | null; preferred: string[] }>();
 const text = defineModel<string>("text", { type: String });
@@ -174,24 +112,13 @@ const sources = computed<ISource[]>(() => {
 const isShowingRedirectDialog = ref(false);
 const isShowingCopyFirstDialog = ref(false);
 const targetSource = ref<ISource | null>(null);
-const targetUrl = ref<string | null>(null);
-
-const wasCopied = ref(false);
-const copyPostText = () => {
-  wasCopied.value = true;
-  navigator.clipboard.writeText(
-    `${text.value || ""}${embeds.value?.map((e: string) => ` ${e}`).join("")}`
-  );
-};
 
 const chooseOption = (source: ISource) => {
   targetSource.value = source;
   if (source.fulfilmentType === "redirect") {
     isShowingRedirectDialog.value = true;
-    targetUrl.value = source.linkGenerator({ text: text.value, embeds: embeds.value });
   } else if (source.fulfilmentType === "promptCopy") {
     isShowingCopyFirstDialog.value = true;
-    targetUrl.value = source.linkGenerator({ text: text.value, embeds: embeds.value });
   } else {
     throw new Error("Unsupported fulfillmentType");
   }

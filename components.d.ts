@@ -10,7 +10,10 @@ declare module 'vue' {
     ComposeScreen: typeof import('./src/components/ComposeScreen.vue')['default']
     FeedEntry: typeof import('./src/components/FeedEntry.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    PromptCopySourceDialog: typeof import('./src/components/PromptCopySourceDialog.vue')['default']
+    RedirectSourceDialog: typeof import('./src/components/RedirectSourceDialog.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    SourceCard: typeof import('./src/components/SourceCard.vue')['default']
   }
 }

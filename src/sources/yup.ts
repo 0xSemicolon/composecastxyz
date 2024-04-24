@@ -6,7 +6,7 @@ const yup: ISource = {
     domain: 'yup.io',
     fulfilmentType: 'promptCopy',
     linkGenerator: () => {
-        return new URL('app.yup.io');
+        return new URL('https://app.yup.io');
     },
     preferenceCondition: ({ url }) => /^(.*\.)?yup\.io$/.test(url.hostname)
 };
