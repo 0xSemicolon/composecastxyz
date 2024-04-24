@@ -13,7 +13,6 @@ export interface ISourceDetails {
 export interface IRedirectSource extends ISourceDetails {
     fulfilmentType: 'redirect';
     linkGenerator: LinkGenerator;
-    autoredirectCondition?: URLCondition;
 }
 
 export interface IPromptCopySource extends ISourceDetails {

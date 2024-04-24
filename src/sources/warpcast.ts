@@ -19,8 +19,7 @@ const warpcast: ISource = {
         }
         return url;
     },
-    preferenceCondition: isFromWarpcast,
-    autoredirectCondition: isFromWarpcast
+    preferenceCondition: isFromWarpcast
 };
 
 export default warpcast;

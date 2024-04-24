@@ -129,10 +129,9 @@ watch(
     if (!url || !sources.value) return;
     const [first] = sources.value;
     if (
-      first.fulfilmentType === "redirect" &&
       props.referrerUrl &&
-      first.autoredirectCondition &&
-      first.autoredirectCondition({ url: new URL(url) })
+      first.preferenceCondition &&
+      first.preferenceCondition({ url: new URL(url) })
     ) {
       chooseOption(first);
     }
