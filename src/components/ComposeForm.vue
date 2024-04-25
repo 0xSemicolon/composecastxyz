@@ -9,6 +9,7 @@
       v-model="text"
       hide-details
       no-resize
+      autofocus
     >
     </v-textarea>
     <v-select

@@ -11,8 +11,8 @@
         <v-alert
           v-if="hasTemplate"
           border
-          color="purple"
-          class="text-h6 px-4 py-6"
+          color="primary"
+          class="text-h6 px-4 py-6 text-white"
           icon="mdi-format-align-left"
           variant="tonal"
         >
@@ -22,7 +22,7 @@
           >
         </v-alert>
         <v-checkbox
-          label="Star this as one of your preferred clients"
+          label="Star this as one of your preferred client"
           color="orange"
           class="text-h6"
           v-model="isStarred"
@@ -52,7 +52,6 @@
 </template>
 
 <script lang="ts" setup>
-import * as Automerge from "@automerge/automerge";
 import { defineModel, defineProps, computed, watch, ref } from "vue";
 import { IRedirectSource } from "@/sources/types";
 import ComposeCastDb from "../databases/composeCastDb";
@@ -70,13 +69,22 @@ const automaticallyContinue = ref<boolean>(false);
 
 const hasTemplate = computed<boolean>(() => {
   return !!(props.text || props.embeds?.length);
-})
+});
 
 const redirectSource = computed<IRedirectSource | null>(() => {
   if (!props.source) return null;
   if (!("fulfilmentType" in props.source)) return null;
   if (props.source.fulfilmentType !== "redirect") return null;
   return props.source as IRedirectSource;
+});
+
+// This is little hacky way of letting users opt out of automatic redirects w/o having to navigate
+watch(automaticallyContinue, (a: boolean, b: boolean) => {
+  if (!a && b) {
+    patchSourceConfig(ComposeCastDb, redirectSource.value.domain, {
+      automaticallyContinue: false
+    });
+  }
 });
 
 watch(
@@ -91,6 +99,9 @@ watch(
     const cfg = await getSourceConfig(ComposeCastDb, redirectSource.value.domain);
     isStarred.value = cfg?.isStarred || false;
     automaticallyContinue.value = cfg?.automaticallyContinue || false;
+    if (automaticallyContinue.value && redirectSource.value.isReferred) {
+      window.location.href = targetUrl.value;
+    }
   },
   { immediate: true }
 );
@@ -108,5 +119,8 @@ const clickContinue = async () => {
 <style scoped>
 .text-h6 >>> .v-label {
   font-size: 1.25rem !important;
+}
+.v-alert >>> .v-alert__content {
+  color: white !important;
 }
 </style>

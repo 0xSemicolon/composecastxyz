@@ -19,7 +19,7 @@
             class="text-h6 px-4 py-6 cursor-pointer"
             :icon="wasCopied ? undefined : 'mdi-content-copy'"
             variant="tonal"
-            :type="wasCopied ? 'success' : undefined"
+            :type="wasCopied ? 'success' : 'primary'"
             border
             @click="copyPostText()"
           >
@@ -34,7 +34,7 @@
           <v-list-subheader v-else class="text-success">Copied!</v-list-subheader>
         </template>
         <v-checkbox
-          label="Star this as a preferred clients"
+          label="Star this as a preferred client"
           color="orange"
           hide-details
           class="text-h6"
@@ -119,5 +119,8 @@ watch(
 <style scoped>
 .text-h6 >>> .v-label {
   font-size: 1.25rem !important;
+}
+.v-alert >>> .v-alert__content {
+  color: white !important;
 }
 </style>
