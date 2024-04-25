@@ -8,6 +8,7 @@
     "lint": "eslint . --fix --ignore-path .gitignore"
   },
   "dependencies": {
+    "@automerge/automerge": "^2.2.0",
     "@mdi/font": "6.2.95",
     "core-js": "^3.34.0",
     "dexie": "^4.0.4",

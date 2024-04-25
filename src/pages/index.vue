@@ -10,7 +10,6 @@
 <script lang="ts" setup>
 import { ref, watch } from "vue";
 import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
-import ComposeScreen from "../components/ComposeScreen.vue";
 
 const route = useRoute();
 

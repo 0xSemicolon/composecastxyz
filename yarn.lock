@@ -12,6 +12,19 @@
   resolved "https://registry.npmjs.org/@antfu/utils/-/utils-0.7.7.tgz"
   integrity sha512-gFPqTG7otEJ8uP6wrhDv6mqwGWYZKNvAcCq6u9hOj0c+IKCEsY4L1oC9trPq2SaWIzAfHvqfBDxF591JkMf+kg==
 
+"@automerge/automerge-wasm@0.15.0":
+  version "0.15.0"
+  resolved "https://registry.npmjs.org/@automerge/automerge-wasm/-/automerge-wasm-0.15.0.tgz"
+  integrity sha512-LGIEw93ezooqEa4mIkTq1j2NVYnz8YT+szwAYA7FNYPdF0ii9JzK5HWIMyoT9dmsBqAgx9JnjNllyFikjPLQqg==
+
+"@automerge/automerge@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.npmjs.org/@automerge/automerge/-/automerge-2.2.0.tgz"
+  integrity sha512-tnMTznckXwqDN1lNh2zQLkfb+0+cE1FcwcOEWtDX7Bvs/SRjp0o9X9bsNm51ND8oDScfePiksXHKiaONxbKGWw==
+  dependencies:
+    "@automerge/automerge-wasm" "0.15.0"
+    uuid "^9.0.0"
+
 "@babel/helper-string-parser@^7.23.4":
   version "7.24.1"
   resolved "https://registry.npmjs.org/@babel/helper-string-parser/-/helper-string-parser-7.24.1.tgz"
@@ -2377,6 +2390,11 @@ util-deprecate@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz"
   integrity sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==
+
+uuid@^9.0.0:
+  version "9.0.1"
+  resolved "https://registry.npmjs.org/uuid/-/uuid-9.0.1.tgz"
+  integrity sha512-b+1eJOlsR9K8HJpow9Ok3fiWOWSIcIzXodvv0rQjVoOVNpWMpxf1wZNpt4y9h10odCNrqnYp1OBzRktckBe3sA==
 
 vite-plugin-vuetify@^2.0.3, vite-plugin-vuetify@>=1.0.0:
   version "2.0.3"

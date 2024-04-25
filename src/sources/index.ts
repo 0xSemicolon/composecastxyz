@@ -13,17 +13,18 @@ const ALL_SOURCES = [
     herocast
 ];
 
-export const randomSources = (url: URL | string | null | undefined) => {
-    if (!url) {
+export const orderedSources = (p: { referrer?: URL | string | null | undefined, preferences?: string[] | null | undefined }) => {
+    let { referrer, preferences } = p;
+    if (!referrer) {
         return ALL_SOURCES.sort(() => 0.5 - Math.random());
     }
-    if (typeof url === 'string') {
-        url = new URL(url);
+    if (typeof referrer === 'string') {
+        referrer = new URL(referrer);
     }
     return ALL_SOURCES
         .map(a => ({
             ...a,
-            isPreferred: a.preferenceCondition && a.preferenceCondition({ url })
+            isPreferred: a.preferenceCondition && a.preferenceCondition({ url: referrer })
         }))
         .sort((a, b) => {
             if (a.isPreferred === b.isPreferred) return 0.5 - Math.random();

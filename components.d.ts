@@ -7,6 +7,8 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    ComposeForm: typeof import('./src/components/ComposeForm.vue')['default']
+    ComposeHeader: typeof import('./src/components/ComposeHeader.vue')['default']
     ComposeScreen: typeof import('./src/components/ComposeScreen.vue')['default']
     FeedEntry: typeof import('./src/components/FeedEntry.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
