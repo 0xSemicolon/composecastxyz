@@ -13,15 +13,10 @@ import { RouteLocationNormalizedLoaded, useRoute } from "vue-router";
 
 const route = useRoute();
 
-const cleanUrl = (url: string | undefined | null) => {
-  if (!url) return "";
-  if (url.startsWith("http://") || url.startsWith("https://")) return url;
-  return `https://${url}`;
-};
 const calcReferrer = (r: RouteLocationNormalizedLoaded) =>
-  document.referrer || cleanUrl(route.query["referrer"]?.toString());
+  document.referrer || route.query["referrer"]?.toString() || '';
 const calcPreferred = (r: RouteLocationNormalizedLoaded) =>
-  (route.query["preferred[]"]?.toString().split(",") || []).map((r:string) => cleanUrl(r));
+  (route.query["preferred[]"]?.toString().split(",") || []);
 const calcText = (r: RouteLocationNormalizedLoaded) =>
   route.query["text"]?.toString() || "";
 const calcEmbeds = (r: RouteLocationNormalizedLoaded) =>

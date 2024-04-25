@@ -39,7 +39,7 @@ import { IRedirectSource } from "@/sources/types";
 
 const model = defineModel<boolean>();
 const props = defineProps<{
-  source: Object;
+  source: Object | null;
   text: string | undefined;
   embeds: string[] | undefined;
 }>();

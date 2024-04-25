@@ -1,6 +1,5 @@
 <template>
   <v-responsive class="align-centerfill-height mx-auto pt-8" style="max-width: 900px">
-    
     <ComposeHeader :referrerUrl="referrerUrl"></ComposeHeader>
 
     <v-row class="px-3 pt-4">
@@ -40,13 +39,13 @@
 
 <script setup lang="ts">
 import { ref, computed, defineProps, defineModel, watch } from "vue";
-import { orderedSources, ISource } from "@/sources/index";
+import { orderedSources, ISource, IOrderedSource } from "@/sources/index";
 
 const props = defineProps<{ referrerUrl: string | null; preferred: string[] }>();
 const text = defineModel<string>("text", { type: String });
 const embeds = defineModel<string[]>("embeds", { type: Array });
 
-const sources = computed<ISource[]>(() => {
+const sources = computed<IOrderedSource[]>(() => {
   return orderedSources({
     referrer: props.referrerUrl,
     preferences: props.preferred,
@@ -56,9 +55,9 @@ const sources = computed<ISource[]>(() => {
 const isShowingRedirectDialog = ref(false);
 const isShowingCopyFirstDialog = ref(false);
 const targetSourceKey = ref<string | null>(null);
-const targetSource = ref<ISource | null>(null);
+const targetSource = ref<IOrderedSource | null>(null);
 
-const chooseOption = (source: ISource | null) => {
+const chooseOption = (source: IOrderedSource | null) => {
   targetSource.value = source;
   targetSourceKey.value = source?.domain || null;
 };
@@ -69,7 +68,9 @@ watch(
     if (!sourceKey) {
       targetSource.value = null;
     } else {
-      const matchingSource = sources.value.find((s: ISource) => s.domain === sourceKey);
+      const matchingSource = sources.value.find(
+        (s: IOrderedSource) => s.domain === sourceKey
+      );
       targetSource.value = matchingSource || null;
     }
   },
@@ -96,11 +97,7 @@ watch(
   (url: string | null) => {
     if (!url || !sources.value) return;
     const [first] = sources.value;
-    if (
-      props.referrerUrl &&
-      first.preferenceCondition &&
-      first.preferenceCondition({ url: new URL(url) })
-    ) {
+    if (props.referrerUrl && first.isReferred) {
       chooseOption(first);
     }
   },
