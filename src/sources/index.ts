@@ -4,9 +4,10 @@ import yup from './yup';
 import farquest from './farquest';
 import herocast from './herocast';
 import type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails } from './types';
+import { ref } from "vue";
 
 export type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails }
-export type IOrderedSource = ISource & { isReferred: boolean; isPreferred: boolean };
+export type IOrderedSource = ISource & { isReferred: boolean; isPreferred: boolean; isStarred: boolean; };
 
 const ALL_SOURCES = [
     warpcast,
@@ -22,7 +23,7 @@ const toNormalizedUrl = (urlStringIsh: URL | string | null): URL | null => {
     if (!urlStringIsh) return null;
     if (typeof urlStringIsh === 'string') {
         try {
-            if (!urlStringIsh.startsWith('http://') || !urlStringIsh.startsWith('https://')) {
+            if (!urlStringIsh.startsWith('http://') && !urlStringIsh.startsWith('https://')) {
                 return new URL(`https://${urlStringIsh}`);
             }
             return new URL(urlStringIsh);
@@ -34,21 +35,31 @@ const toNormalizedUrl = (urlStringIsh: URL | string | null): URL | null => {
     }
 }
 
+const STARRED_WEIGHT = ONCE_RANDOMIZED_SOURCES.length * 3;
 const REFERRAL_WEIGHT = ONCE_RANDOMIZED_SOURCES.length * 2;
 const PREFERRED_WEIGHT = ONCE_RANDOMIZED_SOURCES.length * 1;
 
 
-export const orderedSources = (p: { referrer?: URL | string | null | undefined, preferences?: URL[] | string[] | null | undefined }): IOrderedSource[] => {
+export const orderedSources = (p: { 
+    referrer?: URL | string | null | undefined, 
+    preferences?: URL[] | string[] | null | undefined,
+    starred?: URL[] | string[] | null | undefined 
+}): IOrderedSource[] => {
 
-    let { referrer, preferences } = p;
-    if (!referrer && !preferences?.length) {
-        return ONCE_RANDOMIZED_SOURCES.map(s => ({ ...s, isReferred: false, isPreferred: false }));
+    let { referrer, preferences, starred } = p;
+    if (!referrer && !preferences?.length && !starred?.length) {
+        return ONCE_RANDOMIZED_SOURCES.map(s => ({ ...s, isReferred: false, isPreferred: false, isStarred: false }));
     }
     if (typeof referrer === 'string') {
         referrer = toNormalizedUrl(referrer);
     }
     if (preferences?.length) {
         preferences = preferences
+            .map((p: URL | string) => toNormalizedUrl(p))
+            .filter(p => p) as URL[];
+    }
+    if (starred?.length) {
+        starred = starred
             .map((p: URL | string) => toNormalizedUrl(p))
             .filter(p => p) as URL[];
     }
@@ -60,16 +71,22 @@ export const orderedSources = (p: { referrer?: URL | string | null | undefined, 
             const isPreferred = preferences?.length
                 ? !!(preferences.find(p => a.preferenceCondition && a.preferenceCondition({ url: p as URL })))
                 : false;
-            const INDEX_WEIGHT = ONCE_RANDOMIZED_SOURCES.length - i + 1;
-            const weight = (isReferred ? REFERRAL_WEIGHT : 0) + (isPreferred ? PREFERRED_WEIGHT : 0) + INDEX_WEIGHT;
+            const isStarred = starred?.length
+                ? !!(starred.find(p => a.preferenceCondition && a.preferenceCondition({ url: p as URL })))
+                : false;
+            const indexWeight = ONCE_RANDOMIZED_SOURCES.length - i + 1;
+            const referralWeight = isReferred ? REFERRAL_WEIGHT : 0;
+            const preferredWeight = isPreferred ? PREFERRED_WEIGHT : 0;
+            const starredWeight = isStarred ? STARRED_WEIGHT : 0;
+            const weight = indexWeight + referralWeight + preferredWeight + starredWeight;
             return {
                 ...a,
                 isReferred,
                 isPreferred,
+                isStarred,
                 weight
             };
         });
     const sorted = matches.sort((a, b) => b.weight - a.weight);
-    console.log(sorted);
     return sorted;
 };

@@ -9,6 +9,9 @@ import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
 import { fileURLToPath, URL } from 'node:url'
 
+import wasm from "vite-plugin-wasm";
+import topLevelAwait from "vite-plugin-top-level-await";
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -32,6 +35,8 @@ export default defineConfig({
         }],
       },
     }),
+    wasm(),
+    topLevelAwait()
   ],
   define: { 'process.env': {} },
   resolve: {

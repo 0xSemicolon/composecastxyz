@@ -30,7 +30,6 @@
       :items="sources || []"
       item-title="productName"
       item-value="domain"
-      prepend-icon="mdi-magnify"
       variant="solo"
       placeholder="Search source"
       rounded
@@ -38,6 +37,9 @@
       hide-details
       clearable
     >
+      <template #prepend>
+        <v-icon>mdi-magnify</v-icon>
+      </template>
       <template v-slot:item="{ props, item }">
         <v-list-item
           v-bind="props"
@@ -60,3 +62,13 @@ const text = defineModel<string>("text", { type: String });
 const embeds = defineModel<string[]>("embeds", { type: Array });
 const targetSourceKey = defineModel<string>("targetSourceKey", { type: String });
 </script>
+
+<style scoped>
+.compose-prompt {
+  text-wrap: wrap;
+}
+.text-h6 >>> textarea,
+.text-h6 >>> .v-chip {
+  font-size: 1.25rem !important;
+}
+</style>

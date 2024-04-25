@@ -41,15 +41,21 @@
 import { ref, computed, defineProps, defineModel, watch } from "vue";
 import { orderedSources, ISource, IOrderedSource } from "@/sources/index";
 
-const props = defineProps<{ referrerUrl: string | null; preferred: string[] }>();
+const props = defineProps<{
+  referrerUrl: string | null;
+  preferred: string[];
+  starred: string[];
+}>();
 const text = defineModel<string>("text", { type: String });
 const embeds = defineModel<string[]>("embeds", { type: Array });
 
 const sources = computed<IOrderedSource[]>(() => {
-  return orderedSources({
+  const orderDefinition = {
     referrer: props.referrerUrl,
     preferences: props.preferred,
-  });
+    starred: props.starred
+  };
+  return orderedSources(orderDefinition);
 });
 
 const isShowingRedirectDialog = ref(false);
@@ -104,13 +110,3 @@ watch(
   { immediate: true }
 );
 </script>
-
-<style scoped>
-.compose-prompt {
-  text-wrap: wrap;
-}
-.text-h6 >>> textarea,
-.text-h6 >>> .v-chip {
-  font-size: 1.25rem !important;
-}
-</style>
