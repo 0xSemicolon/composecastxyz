@@ -40,5 +40,6 @@
     "vite-plugin-wasm": "^3.3.0",
     "vue-router": "^4.3.0",
     "vue-tsc": "^2.0.6"
-  }
+  },
+  "packageManager": "yarn@3.6.3"
 }

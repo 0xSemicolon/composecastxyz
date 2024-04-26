@@ -20,9 +20,6 @@
     <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="(opt, i) in sources" :key="i">
       <SourceCard :value="opt" @click="chooseOption(opt)"></SourceCard>
     </v-col>
-    <v-col cols="12" sm="12" md="6" lg="4" xl="3">
-      <GithubCard></GithubCard>
-    </v-col>
   </v-row>
 
   <RedirectSourceDialog
@@ -43,7 +40,6 @@
 <script setup lang="ts">
 import { ref, computed, defineProps, defineModel, watch } from "vue";
 import { orderedSources, ISource, IOrderedSource } from "@/sources/index";
-import GithubCard from "./GithubCard.vue";
 
 const props = defineProps<{
   referrerUrl: string | null;
