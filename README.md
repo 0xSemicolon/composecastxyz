@@ -13,6 +13,8 @@ Therefore we need a repository for that preference information - ideally in a wa
 
 There's a lot more preference data to be captured though. In the future there will be 1000s of domain specific clients. If I'm being prompted to cast about movies, I might not want to automatically fulfill to warpcast but rather to rottentomatoes (or whatever).
 
+For more information on the mission check out https://paragraph.xyz/@semicolon/composecastxyz
+
 ## 💿 Install
 
 Set up your project using your preferred package manager. Use the corresponding command to install the dependencies:
