@@ -1,14 +1,17 @@
-# Vuetify (Default)
+# ComposeCast.xyz
 
-This is the official scaffolding tool for Vuetify, designed to give you a head start in building your new Vuetify application. It sets up a base template with all the necessary configurations and standard directory structure, enabling you to begin development without the hassle of setting up the project from scratch.
+There are a series of verbs in the farcaster ecosystem, such as viewing a cast, viewing a profile, retweeting and composing a cast which require intimate knowledge of a user's preferences which are currently very hard to do at the protocol level.
 
-## ❗️ Important Links
+Compose cast aims to give farcasters control over one of these verbs: 'compose a cast'. 
 
-- 📄 [Docs](https://vuetifyjs.com/)
-- 🚨 [Issues](https://issues.vuetifyjs.com/)
-- 🏬 [Store](https://store.vuetifyjs.com/)
-- 🎮 [Playground](https://play.vuetifyjs.com/)
-- 💬 [Discord](https://community.vuetifyjs.com)
+It is not reasonable to expect a frame developer, or a read-only client developer to know the users preferences. Additionally these preferences might not be publicly inferrable. You might for instance be able to infer that a user prefers to compose casts through warpcast because their messages are usually signed by warpcast. However, in the future it's more likely most apps will sign through some third party like Neynar which obfuscates the origin. Additionally if we find ourselves in a world where users self sign messages more frequently, (i.e. via self hosted applications) then we won't be able to infer this publicly.
+
+Therefore we need a repository for that preference information - ideally in a way that's privacy preserving. My solution to this is composecast.xyz. The preferences of a user are stored purely on device (in IndexedDB). At time of writing there are a few preferences supported:
+
+1) What are my favorite clients (Starred)
+2) Do I want to automatically fulfill requests through a client.
+
+There's a lot more preference data to be captured though. In the future there will be 1000s of domain specific clients. If I'm being prompted to cast about movies, I might not want to automatically fulfill to warpcast but rather to rottentomatoes (or whatever).
 
 ## 💿 Install
 
@@ -22,18 +25,6 @@ Set up your project using your preferred package manager. Use the corresponding 
 | [bun](https://bun.sh/#getting-started)                        | `bun install`  |
 
 After completing the installation, your environment is ready for Vuetify development.
-
-## ✨ Features
-
-- 🖼️ **Optimized Front-End Stack**: Leverage the latest Vue 3 and Vuetify 3 for a modern, reactive UI development experience. [Vue 3](https://v3.vuejs.org/) | [Vuetify 3](https://vuetifyjs.com/en/)
-- 🗃️ **State Management**: Integrated with [Pinia](https://pinia.vuejs.org/), the intuitive, modular state management solution for Vue.
-- 🚦 **Routing and Layouts**: Utilizes Vue Router for SPA navigation and vite-plugin-vue-layouts for organizing Vue file layouts. [Vue Router](https://router.vuejs.org/) | [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-- 💻 **Enhanced Development Experience**: Benefit from TypeScript's static type checking and the ESLint plugin suite for Vue, ensuring code quality and consistency. [TypeScript](https://www.typescriptlang.org/) | [ESLint Plugin Vue](https://eslint.vuejs.org/)
-- ⚡ **Next-Gen Tooling**: Powered by Vite, experience fast cold starts and instant HMR (Hot Module Replacement). [Vite](https://vitejs.dev/)
-- 🧩 **Automated Component Importing**: Streamline your workflow with unplugin-vue-components, automatically importing components as you use them. [unplugin-vue-components](https://github.com/antfu/unplugin-vue-components)
-- 🛠️ **Strongly-Typed Vue**: Use vue-tsc for type-checking your Vue components, and enjoy a robust development experience. [vue-tsc](https://github.com/johnsoncodehk/volar/tree/master/packages/vue-tsc)
-
-These features are curated to provide a seamless development experience from setup to deployment, ensuring that your Vuetify application is both powerful and maintainable.
 
 ## 💡 Usage
 
@@ -62,6 +53,12 @@ yarn build
 (Repeat for npm, pnpm, and bun with respective commands.)
 
 Once the build process is completed, your application will be ready for deployment in a production environment.
+
+## 💪 Support ComposeCast.xyz Development
+
+👋 Hey I'm https://warpcast.com/semicolon.eth - biggest help is if you are building your own client, or know someone who is, let them know about this project and if they can implement a source then awesome! ⬆️ Client diversity ⬆️
+
+
 
 ## 💪 Support Vuetify Development
 
