@@ -20,10 +20,12 @@
       placeholder="Embeds"
       rounded
       class="mt-3 text-h6"
+      menu-icon
       hide-details
+      readonly
     >
       <template v-slot:selection="{ item }">
-        <v-chip color="primary">{{ item.title }}</v-chip>
+        <v-chip color="blue">{{ item.title }}</v-chip>
       </template></v-select
     >
     <v-autocomplete
