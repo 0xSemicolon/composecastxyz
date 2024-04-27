@@ -1,5 +1,5 @@
 <template>
-  <v-img class="mb-4 mt-10" height="70" src="/images/farcaster.svg" />
+  <v-img class="mb-4 mt-10" height="70" :src="farcasterImageUrl" />
   <div class="text-center pb-4">
     <div class="text-body-1 font-weight-light mb-n1">
       {{ topText }}
@@ -10,6 +10,8 @@
 
 <script lang="ts" setup>
 import { defineProps, computed } from "vue";
+import { useTheme } from "vuetify";
+const theme = useTheme();
 const props = defineProps<{ referrerUrl: string | null }>();
 
 const topText = computed(() => {
@@ -20,4 +22,12 @@ const topText = computed(() => {
   }
   return "Continue if you want to";
 });
+
+const farcasterImageUrl = computed(() => {
+  if (theme.global.current.value.dark) {
+    return "/images/farcaster.svg";
+  } else {
+    return "/images/farcaster_light.svg"
+  }
+})
 </script>

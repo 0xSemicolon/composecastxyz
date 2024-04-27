@@ -64,7 +64,7 @@ defineProps<{ value: IOrderedSource | undefined }>();
 .starred.elevation-10 {
   box-shadow: 0px 6px 6px -3px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),
     0px 10px 14px 1px var(--v-shadow-key-penumbra-opacity, rgba(0, 0, 0, 0.14)),
-    0px 4px 18px 3px var(--v-shadow-key-ambient-opacity, #463f1b) !important;
+    0px 4px 18px 3px var(--v-shadow-key-ambient-opacity, #938334) !important;
 }
 .elevation-10 {
   box-shadow: 0px 6px 6px -3px var(--v-shadow-key-umbra-opacity, rgba(0, 0, 0, 0.2)),

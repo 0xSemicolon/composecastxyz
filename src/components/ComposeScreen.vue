@@ -4,7 +4,7 @@
 
     <v-row class="px-3 pt-4">
       <v-col cols="12" class="pb-0">
-        <v-card class="py-4" color="transparent">
+        <v-card class="py-4" color="transparent" flat>
           <ComposeForm
             v-model:text="text"
             v-model:embeds="embeds"
