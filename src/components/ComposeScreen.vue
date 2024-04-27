@@ -16,7 +16,7 @@
     </v-row>
   </v-responsive>
 
-  <v-row class="mt-7 px-3">
+  <v-row class="mt-7 px-3 mx-auto sources-row">
     <v-col cols="12" sm="12" md="6" lg="4" xl="3" v-for="(opt, i) in sources" :key="i">
       <SourceCard :value="opt" @click="chooseOption(opt)"></SourceCard>
     </v-col>
@@ -110,3 +110,8 @@ watch(
   { immediate: true }
 );
 </script>
+<style scoped>
+.sources-row {
+  max-width: 1600px;
+}
+</style>
