@@ -5,6 +5,7 @@ export type FulfilmentType = 'redirect' | 'promptCopy'
 
 export interface ISourceDetails {
     imageUrl: string;
+    imageTile?: true;
     productName: string;
     domain: string;
     preferenceCondition?: URLCondition;

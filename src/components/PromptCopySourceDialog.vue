@@ -2,8 +2,8 @@
   <v-dialog v-model="model" :max-width="600" @update:modelValue="wasCopied = false">
     <v-card v-if="model">
       <v-card-title class="text-h4 text-center pt-7 pb-4">
-        <v-avatar>
-          <v-img :src="promptCopySource.imageUrl"></v-img>
+        <v-avatar :rounded="promptCopySource.imageTile ? 0 : undefined">
+          <v-img :src="promptCopySource.imageUrl" ></v-img>
         </v-avatar>
         {{ promptCopySource.productName }}</v-card-title
       >

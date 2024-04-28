@@ -1,10 +1,14 @@
+
+import type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails } from './types';
 import warpcast from "./warpcast";
 import supercast from './supercast';
 import yup from './yup';
 import farquest from './farquest';
 import herocast from './herocast';
-import type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails } from './types';
-import { ref } from "vue";
+import u3 from './u3';
+import sealcaster from './sealcaster';
+import nook from './nook'
+import s33bits from './33bits';
 
 export type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails }
 export type IOrderedSource = ISource & { isReferred: boolean; isPreferred: boolean; isStarred: boolean; };
@@ -14,9 +18,14 @@ const ALL_SOURCES = [
     supercast,
     yup,
     farquest,
-    herocast
+    herocast,
+    u3,
+    sealcaster,
+    nook,
+    s33bits
 ];
 
+// Randomize once to promote all clients equally in lieu of user or session preferences
 const ONCE_RANDOMIZED_SOURCES = ALL_SOURCES.sort(() => 0.5 - Math.random());
 
 const toNormalizedUrl = (urlStringIsh: URL | string | null): URL | null => {

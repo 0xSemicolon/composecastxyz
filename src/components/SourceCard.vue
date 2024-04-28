@@ -38,8 +38,8 @@
       </v-tooltip>
     </template>
     <template #prepend>
-      <v-avatar v-if="value">
-        <v-img :src="value.imageUrl"></v-img>
+      <v-avatar v-if="value" :rounded="value.imageTile ? 0 : undefined">
+        <v-img :src="value.imageUrl" ></v-img>
       </v-avatar>
     </template>
   </v-card>

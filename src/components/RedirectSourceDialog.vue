@@ -2,7 +2,7 @@
   <v-dialog v-model="model" :max-width="600">
     <v-card v-if="model && redirectSource">
       <v-card-title class="text-h4 text-center pt-7 pb-4">
-        <v-avatar>
+        <v-avatar :rounded="redirectSource.imageTile ? 0 : undefined">
           <v-img :src="redirectSource.imageUrl"></v-img>
         </v-avatar>
         {{ redirectSource.productName }}</v-card-title
