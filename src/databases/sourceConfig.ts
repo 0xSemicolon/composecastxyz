@@ -13,7 +13,7 @@ export const initSourceConfig = (): Automerge.Doc<ISourceConfig> => {
     return Automerge.change(doc1, (d) => {
         d.version = 1;
         d.isStarred = false;
-        d.automaticallyContinue = false;
+        d.automaticallyContinue = true;
     })
 };
 

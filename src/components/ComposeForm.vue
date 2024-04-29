@@ -1,33 +1,35 @@
 <template>
   <v-form>
-    <v-textarea
-      variant="solo"
-      prepend-icon="mdi-message-outline"
-      placeholder="..."
-      class="text-h6"
-      rounded
-      v-model="text"
-      hide-details
-      no-resize
-      autofocus
-    >
-    </v-textarea>
-    <v-select
-      v-if="embeds?.length"
-      v-model="embeds"
-      prepend-icon="mdi-shape-plus"
-      variant="solo"
-      placeholder="Embeds"
-      rounded
-      class="mt-3 text-h6"
-      menu-icon
-      hide-details
-      readonly
-    >
-      <template v-slot:selection="{ item }">
-        <v-chip color="blue">{{ item.title }}</v-chip>
-      </template></v-select
-    >
+    <template v-if="text || (embeds && embeds.length)">
+      <v-textarea
+        variant="solo"
+        prepend-icon="mdi-message-outline"
+        placeholder="..."
+        class="text-h6"
+        rounded
+        v-model="text"
+        hide-details
+        no-resize
+        autofocus
+      >
+      </v-textarea>
+      <v-select
+        v-if="embeds?.length"
+        v-model="embeds"
+        prepend-icon="mdi-shape-plus"
+        variant="solo"
+        placeholder="Embeds"
+        rounded
+        class="mt-3 text-h6"
+        menu-icon
+        hide-details
+        readonly
+      >
+        <template v-slot:selection="{ item }">
+          <v-chip color="blue">{{ item.title }}</v-chip>
+        </template></v-select
+      >
+    </template>
     <v-autocomplete
       v-model="targetSourceKey"
       :items="sources || []"

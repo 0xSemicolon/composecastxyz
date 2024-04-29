@@ -33,13 +33,6 @@
           >
           <v-list-subheader v-else class="text-success">Copied!</v-list-subheader>
         </template>
-        <v-checkbox
-          label="Star this as a preferred client"
-          color="orange"
-          hide-details
-          class="text-h6"
-          v-model="isStarred"
-        ></v-checkbox>
       </v-card-text>
       <v-card-actions>
         <v-btn
@@ -61,8 +54,6 @@
 <script lang="ts" setup>
 import { defineModel, defineProps, computed, watch, ref } from "vue";
 import { IPromptCopySource } from "@/sources/types";
-import ComposeCastDb from "../databases/composeCastDb";
-import { patchSourceConfig, getSourceConfig } from "../databases/sourceConfig";
 
 const model = defineModel<boolean>();
 const props = defineProps<{
@@ -72,7 +63,6 @@ const props = defineProps<{
 }>();
 const targetUrl = ref<string>("");
 const wasCopied = ref(false);
-const isStarred = ref<boolean>(false);
 
 const hasTemplate = computed<boolean>(() => {
   return !!(props.text || props.embeds?.length);
@@ -94,9 +84,6 @@ const copyPostText = () => {
 
 const clickContinue = async () => {
   if (!promptCopySource.value) return;
-  await patchSourceConfig(ComposeCastDb, promptCopySource.value.domain, {
-    isStarred: isStarred.value,
-  });
   window.location.href = targetUrl.value;
 };
 
@@ -109,8 +96,6 @@ watch(
       text: props.text,
       embeds: props.embeds,
     });
-    const cfg = await getSourceConfig(ComposeCastDb, promptCopySource.value.domain);
-    isStarred.value = cfg?.isStarred || false;
   },
   { immediate: true }
 );

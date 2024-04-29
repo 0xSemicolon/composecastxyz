@@ -57,9 +57,13 @@ export class UserConfigDb extends Dexie {
     async changeAutomergeDoc<TType>(key: string, changeFn: Automerge.ChangeFn<TType>, init: () => Automerge.Doc<TType>): Promise<void> {
         // TODO: Want to use dexie tx's just hitting issue w/ `blob.arrayBuffer` promise.
         let doc1 = await this.getAutomergeDoc<TType>(key);
-        if (!doc1) doc1 = init();
+        let inited = false;
+        if (!doc1) {
+            doc1 = init();
+            inited = true;
+        }
         const doc2 = Automerge.change<TType>(doc1, changeFn);
-        if (Automerge.getChanges(doc1, doc2).length) {
+        if (inited || Automerge.getChanges(doc1, doc2).length) {
             await this.putAutomergeDoc(key, doc2);
         }
     }

@@ -13,7 +13,7 @@ import s33bits from './33bits';
 export type { ISource, IPromptCopySource, IRedirectSource, ISourceDetails }
 export type IOrderedSource = ISource & { isReferred: boolean; isPreferred: boolean; isStarred: boolean; };
 
-const ALL_SOURCES = [
+export const ALL_SOURCES = [
     warpcast,
     supercast,
     yup,

@@ -34,7 +34,7 @@ const starred = ref<string[]>([]);
 listSourceConfigs(composeCastDb).then((docs) => {
   starred.value = docs
     .filter(([, d]) => d.isStarred)
-    .map(([k]) => k.replace("source:", ""));
+    .map(([k]) => k.substring("source:".length));
 });
 
 watch(
